@@ -335,6 +335,191 @@ body {
   transform: translateY(-2px);
 }
 
+/* ---------- sections ---------- */
+.chip {
+  display: inline-block;
+  border: 1px solid var(--line);
+  padding: 5px 11px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.service-row {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  padding: 2.75rem 0 2.75rem 1.5rem;
+  border-top: 1px solid var(--line);
+}
+@media (min-width: 768px) {
+  .service-row {
+    grid-template-columns: 90px 1fr 1.2fr;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+.service-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.service-row:hover::before {
+  transform: scaleY(1);
+}
+.service-title {
+  transition:
+    color 0.35s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.service-row:hover .service-title {
+  color: var(--accent);
+  transform: translateX(6px);
+}
+
+.project-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.4s ease;
+}
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(34, 211, 238, 0.45);
+}
+.project-tile {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: radial-gradient(120% 150% at 15% 0%, #101a28 0%, var(--bg) 72%);
+  border-bottom: 1px solid var(--line);
+}
+.project-tile-inner {
+  position: absolute;
+  inset: -12%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+.tile-initials {
+  font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+  font-weight: 700;
+  font-size: clamp(5rem, 10vw, 8.5rem);
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(34, 211, 238, 0.35);
+}
+.tile-slash {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  right: 12%;
+  width: 38%;
+  transform: skewX(-18deg);
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.14), rgba(255, 45, 70, 0.2));
+  border-left: 1px solid rgba(34, 211, 238, 0.3);
+}
+.tile-year {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+}
+
+/* ---------- marquee ---------- */
+.marquee {
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  padding: 22px 0;
+}
+.marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  width: max-content;
+  animation: marquee-scroll 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-item {
+  font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.marquee-item--outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(143, 163, 184, 0.6);
+}
+.marquee-slash {
+  display: inline-block;
+  width: 2px;
+  height: 26px;
+  transform: skewX(-18deg);
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  flex-shrink: 0;
+}
+
+/* ---------- timeline ---------- */
+.tl-spine {
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+.tl-progress {
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  transform: scaleY(0);
+  transform-origin: top;
+  will-change: transform;
+}
+.tl-dot {
+  position: absolute;
+  left: calc(-3rem + 8px);
+  top: 8px;
+  width: 11px;
+  height: 11px;
+  transform: translateX(-50%) rotate(45deg);
+  border: 1px solid var(--accent);
+  background: var(--bg);
+}
+
 @media (max-width: 767px) {
   .hero-scrollcue {
     display: none;
@@ -342,6 +527,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
   .hero-scrollcue::after {
     animation: none;
   }

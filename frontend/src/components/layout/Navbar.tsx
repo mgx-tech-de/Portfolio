@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useScrollTo } from '../../lib/lenis';
+import { gsap, ScrollTrigger } from '../../lib/gsap-setup';
 
 const NAV_LINKS = [
   { label: 'Services', href: '#services' },
@@ -16,7 +17,26 @@ interface NavbarProps {
 
 export function Navbar({ solid }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState<string>('');
   const scrollTo = useScrollTo();
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      NAV_LINKS.forEach(({ href }) => {
+        const el = document.querySelector(href);
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 55%',
+          end: 'bottom 55%',
+          onToggle: (self) => {
+            if (self.isActive) setActive(href);
+          },
+        });
+      });
+    });
+    return () => ctx.revert();
+  }, []);
 
   const go = (href: string) => {
     setOpen(false);
@@ -49,6 +69,7 @@ export function Navbar({ solid }: NavbarProps) {
               key={link.href}
               type="button"
               className="nav-link"
+              aria-current={active === link.href ? 'true' : undefined}
               onClick={() => go(link.href)}
               data-testid={`nav-link-${link.label.toLowerCase()}`}
             >
@@ -83,6 +104,7 @@ export function Navbar({ solid }: NavbarProps) {
                 key={link.href}
                 type="button"
                 className="nav-link py-3 text-left"
+                aria-current={active === link.href ? 'true' : undefined}
                 onClick={() => go(link.href)}
                 data-testid={`mobile-nav-link-${link.label.toLowerCase()}`}
               >

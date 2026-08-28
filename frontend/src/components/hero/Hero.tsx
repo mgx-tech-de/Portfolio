@@ -123,7 +123,7 @@ export function Hero({ onPinProgress }: HeroProps) {
       className="relative flex min-h-screen items-center overflow-hidden"
       data-testid="hero"
     >
-      <CircuitField />
+      <CircuitField testId="circuit-field-hero" />
       <div className="hero-grid mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-20 pt-28 md:grid-cols-[1.25fr_1fr] md:px-10">
         <div className="hero-copy order-2 md:order-1">
           <p

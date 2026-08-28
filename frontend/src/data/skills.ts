@@ -6,28 +6,53 @@ export interface SkillGroup {
 
 export const skills: SkillGroup[] = [
   {
-    id: 'languages',
-    label: 'Languages',
-    items: ['[PLACEHOLDER: languages — see PRD §skills]'],
-  },
-  {
-    id: 'frontend',
-    label: 'Frontend',
-    items: ['[PLACEHOLDER: frontend stack — see PRD §skills]'],
-  },
-  {
     id: 'mobile',
-    label: 'Mobile',
-    items: ['[PLACEHOLDER: mobile stack — see PRD §skills]'],
+    label: 'Flutter & Mobile',
+    items: ['Flutter', 'Dart', 'Android (Java / Kotlin)', 'Provider', 'Riverpod', 'Bloc', 'GetX', 'Firebase', 'Play Store / App Store'],
+  },
+  {
+    id: 'python',
+    label: 'Python & Backend',
+    items: ['Python', 'Flask', 'Django', 'REST APIs', 'PostgreSQL', 'MySQL', 'JWT / OAuth'],
   },
   {
     id: 'ai-ml',
     label: 'AI / ML',
-    items: ['[PLACEHOLDER: AI stack — see PRD §skills]'],
+    items: ['OpenAI', 'Gemini', 'TFLite', 'TensorFlow', 'PyTorch', 'Scikit-Learn', 'MLKit'],
   },
   {
-    id: 'backend-infra',
-    label: 'Backend & Infrastructure',
-    items: ['[PLACEHOLDER: backend/infra — see PRD §skills]'],
+    id: 'data',
+    label: 'Data & Automation',
+    items: ['Selenium', 'Beautiful Soup', 'Scrapy', 'Pandas', 'NumPy', 'Matplotlib / Plotly'],
   },
+  {
+    id: 'payments',
+    label: 'Payments & Monetization',
+    items: ['Stripe', 'PayPal', 'AdMob', 'AdSense'],
+  },
+  {
+    id: 'workflow',
+    label: 'Tools & Workflow',
+    items: ['Git', 'GitHub / GitLab', 'Jira / Scrum', 'Linux', 'Windows'],
+  },
+  {
+    id: 'languages',
+    label: 'Languages',
+    items: ['Arabic — native', 'English — proficient', 'French — proficient', 'German — B2', 'Russian — advanced'],
+  },
+];
+
+export const marqueeSkills: string[] = [
+  'Flutter',
+  'Dart',
+  'Python',
+  'Flask',
+  'OpenAI',
+  'Gemini',
+  'TensorFlow',
+  'TFLite',
+  'Firebase',
+  'Stripe',
+  'PostgreSQL',
+  'Scrapy',
 ];

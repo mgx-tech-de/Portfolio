@@ -1,22 +1,18 @@
-import { Github, Linkedin, Twitter, MapPin, Mail, CalendarClock } from 'lucide-react';
+import { Github, Linkedin, MapPin, Mail } from 'lucide-react';
 import { site } from '../../data/site';
 import { Reveal } from '../Reveal';
 
 const SOCIAL_ICONS: Record<string, typeof Github> = {
   GitHub: Github,
   LinkedIn: Linkedin,
-  X: Twitter,
 };
-
-const isPlaceholder = (value: string) => value.startsWith('[PLACEHOLDER');
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer
-      id="contact"
-      aria-labelledby="contact-heading"
+      aria-labelledby="footer-heading"
       className="relative border-t border-line bg-surface"
       data-testid="footer"
     >
@@ -26,13 +22,14 @@ export function Footer() {
           <img src="/brand/mgx-logo.png" alt="MGX-Tech logo" className="h-10 w-10 object-contain" />
           <p className="mt-6 font-display text-lg font-medium text-ink">{site.tagline}</p>
           <p className="mt-2 max-w-xs text-sm text-mute">
-            {site.role} — building web apps, mobile apps and AI systems since {site.founded}.
+            {site.owner} — {site.role}, building web apps, mobile apps and AI systems since{' '}
+            {site.founded}.
           </p>
         </div>
 
         <div>
           <h2
-            id="contact-heading"
+            id="footer-heading"
             className="font-mono text-xs tracking-[0.25em] text-cyan"
             data-testid="footer-contact-heading"
           >
@@ -41,27 +38,13 @@ export function Footer() {
           <ul className="mt-6 space-y-4 text-sm">
             <li className="flex items-center gap-3 text-mute" data-testid="footer-email">
               <Mail size={15} className="shrink-0 text-cyan" aria-hidden="true" />
-              {isPlaceholder(site.email) ? (
-                <span>{site.email}</span>
-              ) : (
-                <a href={`mailto:${site.email}`} className="footer-legal-link">
-                  {site.email}
-                </a>
-              )}
+              <a href={`mailto:${site.email}`} className="footer-legal-link">
+                {site.email}
+              </a>
             </li>
             <li className="flex items-center gap-3 text-mute" data-testid="footer-location">
               <MapPin size={15} className="shrink-0 text-cyan" aria-hidden="true" />
               <span>{site.location}</span>
-            </li>
-            <li className="flex items-center gap-3 text-mute" data-testid="footer-booking">
-              <CalendarClock size={15} className="shrink-0 text-red" aria-hidden="true" />
-              {isPlaceholder(site.bookingUrl) ? (
-                <span>{site.bookingUrl}</span>
-              ) : (
-                <a href={site.bookingUrl} className="footer-legal-link" rel="noreferrer" target="_blank">
-                  Book a free 20-min call
-                </a>
-              )}
             </li>
           </ul>
         </div>
@@ -88,7 +71,7 @@ export function Footer() {
               return (
                 <a
                   key={social.label}
-                  href={isPlaceholder(social.href) ? '#' : social.href}
+                  href={social.href}
                   aria-label={`MGX-Tech on ${social.label}`}
                   className="social-icon-btn"
                   rel="noreferrer"

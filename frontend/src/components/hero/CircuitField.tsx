@@ -20,14 +20,18 @@ const NODES: ReadonlyArray<readonly [number, number]> = [
   [308, 128],
 ];
 
-export function CircuitField() {
+interface CircuitFieldProps {
+  testId?: string;
+}
+
+export function CircuitField({ testId }: CircuitFieldProps) {
   return (
     <svg
       className="pointer-events-none absolute inset-0 h-full w-full"
       viewBox="0 0 1440 900"
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
-      data-testid="circuit-field"
+      data-testid={testId}
     >
       {CYAN_PATHS.map((d) => (
         <path

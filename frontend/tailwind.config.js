@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        base: 'var(--bg)',
+        night: 'var(--bg)',
         surface: 'var(--surface)',
         raised: 'var(--surface-2)',
         ink: 'var(--text)',

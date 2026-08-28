@@ -5,10 +5,13 @@ export interface SocialLink {
 
 export interface SiteConfig {
   name: string;
+  owner: string;
   tagline: string;
   role: string;
   location: string;
   email: string;
+  phoneDisplay: string;
+  phoneHref: string;
   bookingUrl: string;
   founded: number;
   socials: SocialLink[];
@@ -20,16 +23,18 @@ export interface SiteConfig {
 
 export const site: SiteConfig = {
   name: 'MGX-Tech',
+  owner: 'Mahmoud Amrous',
   tagline: 'Software. Web. Apps. AI.',
   role: 'Freelance Software & AI Engineer',
   location: 'Berlin, Germany',
-  email: '[PLACEHOLDER: contact email — see PRD §site]',
-  bookingUrl: '[PLACEHOLDER: booking / calendar link — see PRD §site]',
+  email: 'contact@mgx-tech.com',
+  phoneDisplay: '+49 177 5478441',
+  phoneHref: 'tel:+491775478441',
+  bookingUrl: '[PLACEHOLDER: booking / calendar link — not in CV]',
   founded: 2018,
   socials: [
-    { label: 'GitHub', href: '[PLACEHOLDER: GitHub profile URL — see PRD §site]' },
-    { label: 'LinkedIn', href: '[PLACEHOLDER: LinkedIn profile URL — see PRD §site]' },
-    { label: 'X', href: '[PLACEHOLDER: X profile URL — see PRD §site]' },
+    { label: 'GitHub', href: 'https://github.com/mgx-tech-de' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mgx-tech' },
   ],
   legal: {
     impressum: '/impressum',
