@@ -14,6 +14,9 @@ export default defineConfig(async ({ mode }) => {
   const hmrPort = Number(env.WDS_SOCKET_PORT || 0);
   return {
     plugins,
+    define: {
+      'import.meta.env.REACT_APP_BACKEND_URL': JSON.stringify(env.REACT_APP_BACKEND_URL || ''),
+    },
     resolve: {
       alias: { '@': path.resolve(__dirname, 'src') },
     },

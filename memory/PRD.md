@@ -35,6 +35,17 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 - Navbar scrollspy: active link gets diagonal gradient underline (aria-current).
 - Footer: real contact info; placeholder booking row removed.
 
+2026-08-28 (chat):
+- AI chat assistant: POST /api/chat (SSE streaming via emergentintegrations LlmChat, openai/gpt-5.4,
+  EMERGENT_LLM_KEY in backend/.env, X-Accel-Buffering:no), GET /api/chat/{session}/history; messages
+  persisted to Mongo chat_messages; system prompt built from CV facts; history replayed via transcript
+  in prompt (library manages no history).
+- ChatLauncher UI: diagonal cyan/red split chamfered launcher (ping animation), chamfered panel with
+  greeting, suggestion chips, streaming render, typing dots, Escape close, data-lenis-prevent on
+  message list; session id in localStorage (mgx-chat-session).
+- vite.config define maps REACT_APP_BACKEND_URL into import.meta.env (Vite exposes only VITE_*).
+- Verified: curl SSE stream ok; history endpoint returns persisted pair; live UI send/receive ok.
+
 ## Bugs fixed during verification
 - .hero-wipe CSS translateX double-counted by GSAP → GSAP owns xPercent (2026-08-27).
 - Tailwind color token `base` collided with core `text-base` font-size → renamed to `night` (2026-08-28).
@@ -46,9 +57,9 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 ## Backlog (prioritized)
 - P1: Booking/calendar link from client → replace mailto CTA target (site.bookingUrl).
 - P1: Impressum + Datenschutz pages (/impressum, /datenschutz) — legal requirement in Germany.
-- P2: Chat launcher with diagonal motif (per original brief's recurring elements).
 - P2: OG/social meta tags, sitemap, favicon variants.
 - P2: Project detail pages or modals with screenshots if client provides them.
+- P2: Chat: German/English greeting based on browser locale; lead capture (ask for email on intent).
 
 ## Verified
 - 2026-08-28: curl 200 local + preview; screenshots at 1440 for services/projects/experience/skills/contact;

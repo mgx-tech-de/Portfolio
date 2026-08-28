@@ -9,6 +9,7 @@ import { Projects } from './components/sections/Projects';
 import { Experience } from './components/sections/Experience';
 import { Skills } from './components/sections/Skills';
 import { Contact } from './components/sections/Contact';
+import { ChatLauncher } from './components/chat/ChatLauncher';
 
 export default function App() {
   const [pastHero, setPastHero] = useState(false);
@@ -27,6 +28,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <ChatLauncher />
     </LenisProvider>
   );
 }
