@@ -82,6 +82,7 @@ export const projects: Project[] = [
       'Loyalty app for mobile and web built around QR code generation — customers collect stamps with every visit and redeem them for rewards.',
     tags: ['Flutter', 'Web', 'QR codes'],
     year: '2024 — Present',
+    images: ['/projects/stampwich.jpg'],
   },
   {
     id: 'nitrex',

@@ -773,6 +773,28 @@ body {
   }
 }
 
+/* ---------- hero cameo ---------- */
+.hero-cameo {
+  position: absolute;
+  right: -6%;
+  top: 7%;
+  width: min(58%, 880px);
+  opacity: 0;
+  pointer-events: none;
+  filter: saturate(0.85);
+  -webkit-mask-image: radial-gradient(85% 85% at 58% 42%, #000 28%, transparent 74%);
+  mask-image: radial-gradient(85% 85% at 58% 42%, #000 28%, transparent 74%);
+  will-change: transform;
+  z-index: 0;
+}
+@media (max-width: 767px) {
+  .hero-cameo {
+    width: 110%;
+    right: -30%;
+    top: 2%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
     animation: none;

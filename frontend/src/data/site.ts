@@ -12,6 +12,7 @@ export interface SiteConfig {
   email: string;
   phoneDisplay: string;
   phoneHref: string;
+  whatsappUrl: string;
   bookingUrl: string;
   founded: number;
   socials: SocialLink[];
@@ -30,7 +31,10 @@ export const site: SiteConfig = {
   email: 'contact@mgx-tech.com',
   phoneDisplay: '+49 177 5478441',
   phoneHref: 'tel:+491775478441',
-  bookingUrl: '[PLACEHOLDER: booking / calendar link — not in CV]',
+  whatsappUrl:
+    'https://wa.me/491775478441?text=Hi%20Mahmoud%2C%20I%27d%20like%20to%20book%20a%20free%2020-min%20call.',
+  bookingUrl:
+    'https://wa.me/491775478441?text=Hi%20Mahmoud%2C%20I%27d%20like%20to%20book%20a%20free%2020-min%20call.',
   founded: 2018,
   socials: [
     { label: 'GitHub', href: 'https://github.com/mgx-tech-de' },

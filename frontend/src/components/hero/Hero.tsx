@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from '../../lib/gsap-setup';
 import { useScrollTo } from '../../lib/lenis';
+import { site } from '../../data/site';
 import { CircuitField } from './CircuitField';
 
 const HEADLINE_LINES = ['Software.', 'Web.', 'Apps.'];
@@ -13,6 +14,7 @@ export function Hero({ onPinProgress }: HeroProps) {
   const root = useRef<HTMLElement>(null);
   const logoWrap = useRef<HTMLDivElement>(null);
   const logo = useRef<HTMLImageElement>(null);
+  const cameo = useRef<HTMLImageElement>(null);
   const wipe = useRef<HTMLDivElement>(null);
   const scrollTo = useScrollTo();
 
@@ -31,10 +33,16 @@ export function Hero({ onPinProgress }: HeroProps) {
             { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 1.2 },
           )
           .fromTo(
+            cameo.current,
+            { opacity: 0, scale: 1.04 },
+            { opacity: 0.1, scale: 1, duration: 1.8, ease: 'power2.out' },
+            '-=0.9',
+          )
+          .fromTo(
             lines,
             { yPercent: 118, filter: 'blur(8px)' },
             { yPercent: 0, filter: 'blur(0px)', duration: 0.95, stagger: 0.09 },
-            '-=0.6',
+            '-=1.3',
           )
           .fromTo(
             fadeIns,
@@ -63,6 +71,8 @@ export function Hero({ onPinProgress }: HeroProps) {
           { strokeDashoffset: 0, duration: 0.55, stagger: 0.035 },
           0,
         );
+        tl.fromTo(cameo.current, { yPercent: 5 }, { yPercent: -10, duration: 0.8 }, 0);
+        tl.to(cameo.current, { opacity: 0, duration: 0.35, ease: 'power1.in' }, 0.16);
         tl.to(
           logo.current,
           {
@@ -103,6 +113,7 @@ export function Hero({ onPinProgress }: HeroProps) {
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set('.circuit-path', { strokeDashoffset: 0 });
+        gsap.set(cameo.current, { opacity: 0.1 });
         gsap.fromTo(
           [logo.current, ...lines, ...fadeIns],
           { autoAlpha: 0 },
@@ -124,7 +135,15 @@ export function Hero({ onPinProgress }: HeroProps) {
       data-testid="hero"
     >
       <CircuitField testId="circuit-field-hero" />
-      <div className="hero-grid mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-20 pt-28 md:grid-cols-[1.25fr_1fr] md:px-10">
+      <img
+        ref={cameo}
+        src="/projects/nitrex.png"
+        alt=""
+        aria-hidden="true"
+        className="hero-cameo"
+        data-testid="hero-cameo"
+      />
+      <div className="hero-grid relative z-[1] mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-6 pb-20 pt-28 md:grid-cols-[1.25fr_1fr] md:px-10">
         <div className="hero-copy order-2 md:order-1">
           <p
             className="hero-fade font-mono text-xs tracking-[0.25em] text-cyan"
@@ -151,14 +170,15 @@ export function Hero({ onPinProgress }: HeroProps) {
             and AI systems since 2018.
           </p>
           <div className="hero-fade mt-10 flex flex-wrap items-center gap-4">
-            <button
-              type="button"
+            <a
+              href={site.whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
               className="btn-primary"
-              onClick={() => scrollTo('#contact')}
               data-testid="hero-cta-book"
             >
               <span>Book a free 20-min call</span>
-            </button>
+            </a>
             <button
               type="button"
               className="btn-ghost"

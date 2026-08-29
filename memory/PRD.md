@@ -57,6 +57,15 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 - Client Websites shown WITHOUT urls per user request.
 - Playwright pip package installed into /root/.venv (not a backend dep; screenshot tooling only).
 
+2026-08-29 (hero cameo + image refresh + WhatsApp):
+- Hero background cameo: nitrex.png at 10% opacity, radial-masked, slow intro fade + parallax + fade-out
+  in the pin timeline (Hero.tsx, .hero-cameo).
+- Replaced site screenshots with user-provided ones: stampwich.jpg (new, Stampwich tile now live),
+  site-htv24.jpg, site-dilam.jpg, site-dzmarket.jpg (Algerian Market).
+- "Book a free 20-min call" now opens WhatsApp: site.whatsappUrl + site.bookingUrl =
+  https://wa.me/491775478441?text=Hi%20Mahmoud... ; hero + contact CTAs are anchors (target _blank);
+  footer booking row renders automatically. Chat system prompt now mentions WhatsApp booking.
+
 ## Bugs fixed during verification
 - .hero-wipe CSS translateX double-counted by GSAP → GSAP owns xPercent (2026-08-27).
 - Tailwind color token `base` collided with core `text-base` font-size → renamed to `night` (2026-08-28).
@@ -66,11 +75,9 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 - Recruiter or partner scanning experience and skills.
 
 ## Backlog (prioritized)
-- P1: Booking/calendar link from client → replace mailto CTA target (site.bookingUrl).
 - P1: Impressum + Datenschutz pages (/impressum, /datenschutz) — legal requirement in Germany.
 - P2: OG/social meta tags, sitemap, favicon variants.
 - P2: Project detail pages or modals if client provides more material.
-- P2: Stampwich screenshots (user will provide) → replace monogram tile.
 - P2: Chat: German/English greeting based on browser locale; lead capture (ask for email on intent).
 
 ## Verified

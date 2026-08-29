@@ -22,7 +22,13 @@ export function Contact() {
           Berlin, working with clients anywhere.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-4">
-          <a href={`mailto:${site.email}`} className="btn-primary" data-testid="contact-cta-email">
+          <a
+            href={site.whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary"
+            data-testid="contact-cta-whatsapp"
+          >
             <span>Book a free 20-min call</span>
           </a>
           <a href={site.phoneHref} className="btn-ghost" data-testid="contact-cta-phone">
