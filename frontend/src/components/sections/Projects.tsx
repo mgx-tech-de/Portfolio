@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from '../../lib/gsap-setup';
 import { projects, type Project } from '../../data/projects';
+import { useLanguage, type Lang } from '../../i18n/LanguageContext';
 import { Reveal } from '../Reveal';
 import { SectionHeader } from '../SectionHeader';
 
@@ -49,8 +50,34 @@ function ProjectTile({ project }: { project: Project }) {
   );
 }
 
+function ProjectCard({ project, lang }: { project: Project; lang: Lang }) {
+  return (
+    <article className="project-card" data-testid={`project-${project.id}`}>
+      <ProjectTile project={project} />
+      <div className="p-6 md:p-8">
+        <div className="flex items-baseline justify-between gap-4">
+          <span className="font-mono text-xs text-cyan">/{project.index}</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">
+            {project.category[lang]}
+          </span>
+        </div>
+        <h3 className="mt-3 font-display text-xl font-medium md:text-2xl">{project.title}</h3>
+        <p className="mt-3 text-sm text-mute">{project.description[lang]}</p>
+        <ul className="mt-5 flex flex-wrap gap-2" aria-label={`${project.title} technologies`}>
+          {project.tags[lang].map((tag) => (
+            <li key={tag} className="chip">
+              {tag}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  );
+}
+
 export function Projects() {
   const root = useRef<HTMLElement>(null);
+  const { lang, t } = useLanguage();
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -87,35 +114,16 @@ export function Projects() {
     >
       <div className="mx-auto max-w-6xl px-6 py-24 md:px-10 md:py-36">
         <Reveal>
-          <SectionHeader index="02" kicker="Projects" title="Selected work" titleId="projects-title" />
+          <SectionHeader
+            index="02"
+            kicker={t.sections.projects.kicker}
+            title={t.sections.projects.title}
+            titleId="projects-title"
+          />
         </Reveal>
         <Reveal className="mt-16 grid gap-8 md:grid-cols-2">
           {projects.map((project) => (
-            <article key={project.id} className="project-card" data-testid={`project-${project.id}`}>
-              <ProjectTile project={project} />
-              <div className="p-6 md:p-8">
-                <div className="flex items-baseline justify-between gap-4">
-                  <span className="font-mono text-xs text-cyan">/{project.index}</span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-mute">
-                    {project.category}
-                  </span>
-                </div>
-                <h3 className="mt-3 font-display text-xl font-medium md:text-2xl">
-                  {project.title}
-                </h3>
-                <p className="mt-3 text-sm text-mute">{project.description}</p>
-                <ul
-                  className="mt-5 flex flex-wrap gap-2"
-                  aria-label={`${project.title} technologies`}
-                >
-                  {project.tags.map((tag) => (
-                    <li key={tag} className="chip">
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
+            <ProjectCard key={project.id} project={project} lang={lang} />
           ))}
         </Reveal>
       </div>

@@ -1,10 +1,13 @@
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { site } from '../../data/site';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { Reveal } from '../Reveal';
 import { SectionHeader } from '../SectionHeader';
 import { CircuitField } from '../hero/CircuitField';
 
 export function Contact() {
+  const { t } = useLanguage();
+
   return (
     <section
       id="contact"
@@ -16,10 +19,14 @@ export function Contact() {
         <CircuitField testId="circuit-field-contact" />
       </div>
       <Reveal className="relative mx-auto max-w-6xl px-6 py-24 md:px-10 md:py-36">
-        <SectionHeader index="05" kicker="Contact" title="Have a project in mind?" titleId="contact-title" />
+        <SectionHeader
+          index="05"
+          kicker={t.sections.contact.kicker}
+          title={t.sections.contact.title}
+          titleId="contact-title"
+        />
         <p className="mt-6 max-w-lg text-base text-mute md:text-lg" data-testid="contact-sub">
-          Book a free 20-minute intro call, write an email, or just phone directly — based in
-          Berlin, working with clients anywhere.
+          {t.sections.contact.sub}
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-4">
           <a
@@ -29,7 +36,7 @@ export function Contact() {
             className="btn-primary"
             data-testid="contact-cta-whatsapp"
           >
-            <span>Book a free 20-min call</span>
+            <span>{t.sections.contact.ctaBook}</span>
           </a>
           <a href={site.phoneHref} className="btn-ghost" data-testid="contact-cta-phone">
             <span>{site.phoneDisplay}</span>

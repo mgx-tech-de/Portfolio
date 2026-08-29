@@ -81,15 +81,20 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 ## Bugs fixed during verification
 - .hero-wipe CSS translateX double-counted by GSAP → GSAP owns xPercent (2026-08-27).
 - Tailwind color token `base` collided with core `text-base` font-size → renamed to `night` (2026-08-28).
+- 2026-08-29: Legal address — [PLATZHALTER] replaced with Alexanderplatz 1, 10178 Berlin in
+  Impressum + Datenschutz; unused .legal-placeholder CSS removed.
+- 2026-08-29: Lead email — one-off transient 422 from managed Resend proxy; added INFO success log
+  ("Lead notification email dispatched") + error-body logging in _notify_lead. Verified dispatch 202.
 
 ## Personas
 - Potential freelance client (startup/SME/local business) evaluating MGX-Tech for web/mobile/AI work.
 - Recruiter or partner scanning experience and skills.
 
 ## Backlog (prioritized)
-- P0: Client provides street address → replace [PLATZHALTER] in Impressum + Datenschutz (both pages).
+- ~~P0: Client provides street address~~ DONE (2026-08-29): Alexanderplatz 1, 10178 Berlin in both legal pages.
+- P1: Project modals (full-screen gallery per project card) — proposed, awaiting user approval.
+- P1 (untested): EN/DE language toggle — implemented, user deferred verification.
 - P2: OG image URL update when a custom domain replaces the preview URL.
-- P2: Project detail pages or modals if client provides more material.
 - P2: Chat: German/English greeting based on browser locale.
 
 ## Verified

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
 import { API_URL } from '../../lib/api';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 interface ChatMsg {
   role: 'user' | 'assistant';
@@ -8,18 +9,6 @@ interface ChatMsg {
 }
 
 const LEAD_TOKEN = '[LEAD_FORM]';
-
-const GREETING: ChatMsg = {
-  role: 'assistant',
-  content:
-    "Hi — I'm the MGX-Tech assistant. Ask me anything about services, projects, or working together.",
-};
-
-const SUGGESTIONS = [
-  'What services does MGX-Tech offer?',
-  'Do you build Flutter apps?',
-  'Wie kann ich dich erreichen?',
-] as const;
 
 function getSessionId(): string {
   const existing = localStorage.getItem('mgx-chat-session');
@@ -30,8 +19,11 @@ function getSessionId(): string {
 }
 
 export function ChatLauncher() {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMsg[]>([GREETING]);
+  const [messages, setMessages] = useState<ChatMsg[]>([
+    { role: 'assistant', content: t.chat.greeting },
+  ]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [leadEmail, setLeadEmail] = useState('');
@@ -49,7 +41,7 @@ export function ChatLauncher() {
       .then((data: { messages?: ChatMsg[] } | null) => {
         if (data?.messages?.length && !historyLoaded.current) {
           historyLoaded.current = true;
-          setMessages([GREETING, ...data.messages]);
+          setMessages((prev) => [...prev, ...data.messages!]);
         }
       })
       .catch(() => undefined);
@@ -161,14 +153,7 @@ export function ChatLauncher() {
       });
       if (!res.ok) throw new Error('lead failed');
       setLeadStatus('sent');
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content:
-            "Got it — your details are with Mahmoud and he'll get back to you shortly. For an instant answer, you can also WhatsApp him directly at +49 177 5478441.",
-        },
-      ]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: t.chat.leadConfirm }]);
     } catch {
       setLeadStatus('error');
     }
@@ -179,19 +164,19 @@ export function ChatLauncher() {
       <div
         className={`chat-panel ${open ? 'chat-panel--open' : ''}`}
         role="dialog"
-        aria-label="MGX-Tech assistant chat"
+        aria-label={t.chat.openLabel}
         aria-hidden={!open}
         data-testid="chat-panel"
       >
         <div className="chat-panel-header">
           <div className="flex items-center gap-3">
             <span className="chat-status-dot" aria-hidden="true" />
-            <p className="font-mono text-xs tracking-[0.25em] text-ink">{'MGX // ASSISTANT'}</p>
+            <p className="font-mono text-xs tracking-[0.25em] text-ink">{t.chat.title}</p>
           </div>
           <button
             type="button"
             onClick={() => setOpen(false)}
-            aria-label="Close chat"
+            aria-label={t.chat.closePanelLabel}
             className="p-1 text-mute transition-colors hover:text-ink"
             data-testid="chat-close-button"
             tabIndex={open ? 0 : -1}
@@ -226,16 +211,14 @@ export function ChatLauncher() {
 
           {leadOffered && (
             <form className="chat-lead-form" onSubmit={submitLead} data-testid="chat-lead-form">
-              <p className="font-mono text-[10px] tracking-[0.2em] text-cyan">
-                {'// LEAVE YOUR DETAILS'}
-              </p>
+              <p className="font-mono text-[10px] tracking-[0.2em] text-cyan">{t.chat.leadKicker}</p>
               <input
                 type="email"
                 required
                 value={leadEmail}
                 onChange={(e) => setLeadEmail(e.target.value)}
-                placeholder="your@email.com"
-                aria-label="Your email address"
+                placeholder={t.chat.leadEmailPlaceholder}
+                aria-label="Email"
                 className="chat-input w-full"
                 maxLength={320}
                 data-testid="lead-email-input"
@@ -244,8 +227,8 @@ export function ChatLauncher() {
               <textarea
                 value={leadIdea}
                 onChange={(e) => setLeadIdea(e.target.value)}
-                placeholder="A sentence or two about your project idea…"
-                aria-label="Your project idea"
+                placeholder={t.chat.leadIdeaPlaceholder}
+                aria-label="Project idea"
                 rows={3}
                 className="chat-textarea"
                 maxLength={4000}
@@ -259,11 +242,11 @@ export function ChatLauncher() {
                 data-testid="lead-submit-button"
                 tabIndex={open ? 0 : -1}
               >
-                {leadStatus === 'sending' ? 'Sending…' : 'Send to Mahmoud'}
+                {leadStatus === 'sending' ? t.chat.leadSending : t.chat.leadSubmit}
               </button>
               {leadStatus === 'error' && (
                 <p className="font-mono text-xs text-red" data-testid="lead-error">
-                  Couldn&apos;t send — please email contact@mgx-tech.com directly.
+                  {t.chat.leadError}
                 </p>
               )}
             </form>
@@ -271,7 +254,7 @@ export function ChatLauncher() {
 
           {messages.length === 1 && (
             <div className="mt-3 flex flex-col items-start gap-2" data-testid="chat-suggestions">
-              {SUGGESTIONS.map((s) => (
+              {t.chat.suggestions.map((s) => (
                 <button
                   key={s}
                   type="button"
@@ -299,7 +282,7 @@ export function ChatLauncher() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about services, projects…"
+            placeholder={t.chat.inputPlaceholder}
             aria-label="Chat message"
             className="chat-input"
             maxLength={2000}
@@ -324,7 +307,7 @@ export function ChatLauncher() {
         type="button"
         className="chat-launcher"
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? 'Close chat assistant' : 'Open chat assistant'}
+        aria-label={open ? t.chat.closeLabel : t.chat.openLabel}
         aria-expanded={open}
         data-testid="chat-launcher-button"
       >

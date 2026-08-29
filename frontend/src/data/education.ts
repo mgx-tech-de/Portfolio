@@ -1,31 +1,34 @@
 export interface EducationEntry {
   id: string;
-  title: string;
+  title: { en: string; de: string };
   school: string;
-  location: string;
+  location: { en: string; de: string };
   period: string;
 }
 
 export const education: EducationEntry[] = [
   {
     id: 'cs-degree',
-    title: 'Computer Science — algorithms, data structures, mathematics',
+    title: {
+      en: 'Computer Science — algorithms, data structures, mathematics',
+      de: 'Informatik — Algorithmen, Datenstrukturen, Mathematik',
+    },
     school: 'University of Mohamed Khider',
-    location: 'Biskra, Algeria',
+    location: { en: 'Biskra, Algeria', de: 'Biskra, Algerien' },
     period: '2012 — 2015',
   },
   {
     id: 'spiced',
-    title: 'Machine Learning & AI Bootcamp',
+    title: { en: 'Machine Learning & AI Bootcamp', de: 'Machine-Learning- & KI-Bootcamp' },
     school: 'Spiced Academy',
-    location: 'Berlin, Germany',
+    location: { en: 'Berlin, Germany', de: 'Berlin, Deutschland' },
     period: '2024',
   },
   {
     id: 'german-b2',
-    title: 'German Course — B2 Level',
+    title: { en: 'German Course — B2 Level', de: 'Deutschkurs — Niveau B2' },
     school: 'JobKonzept',
-    location: 'Berlin, Germany',
+    location: { en: 'Berlin, Germany', de: 'Berlin, Deutschland' },
     period: '2023 — 2025',
   },
 ];

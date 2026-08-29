@@ -15,8 +15,7 @@ export default function Datenschutz() {
           <p>
             MGX-Tech — {site.owner}
             <br />
-            <span className="legal-placeholder">[PLATZHALTER: Straße und Hausnummer]</span>, Berlin,
-            Deutschland
+            Alexanderplatz 1, 10178 Berlin, Deutschland
             <br />
             E-Mail: {site.email} · Telefon: {site.phoneDisplay}
           </p>

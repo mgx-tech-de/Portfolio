@@ -15,11 +15,9 @@ export default function Impressum() {
           <p>
             MGX-Tech — {site.owner} (Freiberufler)
             <br />
-            <span className="legal-placeholder" data-testid="impressum-address-placeholder">
-              [PLATZHALTER: Straße und Hausnummer]
-            </span>
+            <span data-testid="impressum-address">Alexanderplatz 1</span>
             <br />
-            Berlin, Deutschland
+            10178 Berlin, Deutschland
           </p>
           <h2>Kontakt</h2>
           <p>

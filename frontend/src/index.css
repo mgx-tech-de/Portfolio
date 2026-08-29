@@ -795,6 +795,49 @@ body {
   }
 }
 
+/* ---------- language switch ---------- */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.lang-btn {
+  position: relative;
+  color: var(--text-muted);
+  padding: 4px 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  transition: color 0.3s ease;
+}
+.lang-btn:hover {
+  color: var(--text);
+}
+.lang-btn--on {
+  color: var(--accent);
+}
+.lang-btn--on::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 95%);
+  transform: skewX(-18deg);
+}
+.lang-divider {
+  width: 1px;
+  height: 13px;
+  background: var(--line);
+  transform: skewX(-18deg);
+}
+
 /* ---------- legal pages ---------- */
 .legal-body h2 {
   margin-top: 2.5rem;
@@ -808,11 +851,6 @@ body {
   color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.75;
-}
-.legal-placeholder {
-  color: var(--accent-2);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 0.85em;
 }
 
 /* ---------- chat lead form ---------- */

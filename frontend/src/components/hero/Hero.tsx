@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { gsap } from '../../lib/gsap-setup';
 import { useScrollTo } from '../../lib/lenis';
 import { site } from '../../data/site';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { CircuitField } from './CircuitField';
 
 const HEADLINE_LINES = ['Software.', 'Web.', 'Apps.'];
@@ -17,6 +18,7 @@ export function Hero({ onPinProgress }: HeroProps) {
   const cameo = useRef<HTMLImageElement>(null);
   const wipe = useRef<HTMLDivElement>(null);
   const scrollTo = useScrollTo();
+  const { t } = useLanguage();
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -149,7 +151,7 @@ export function Hero({ onPinProgress }: HeroProps) {
             className="hero-fade font-mono text-xs tracking-[0.25em] text-cyan"
             data-testid="hero-kicker"
           >
-            {'// FREELANCE SOFTWARE & AI ENGINEERING — BERLIN'}
+            {t.hero.kicker}
           </p>
           <h1
             id="hero-heading"
@@ -166,8 +168,7 @@ export function Hero({ onPinProgress }: HeroProps) {
             </span>
           </h1>
           <p className="hero-fade mt-8 max-w-md text-base text-mute md:text-lg" data-testid="hero-sub">
-            Freiberuflicher Software &amp; AI Engineer in Berlin — building web apps, mobile apps
-            and AI systems since 2018.
+            {t.hero.sub}
           </p>
           <div className="hero-fade mt-10 flex flex-wrap items-center gap-4">
             <a
@@ -177,7 +178,7 @@ export function Hero({ onPinProgress }: HeroProps) {
               className="btn-primary"
               data-testid="hero-cta-book"
             >
-              <span>Book a free 20-min call</span>
+              <span>{t.hero.ctaBook}</span>
             </a>
             <button
               type="button"
@@ -185,7 +186,7 @@ export function Hero({ onPinProgress }: HeroProps) {
               onClick={() => scrollTo('#projects')}
               data-testid="hero-cta-projects"
             >
-              <span>See projects</span>
+              <span>{t.hero.ctaProjects}</span>
             </button>
           </div>
         </div>
@@ -202,7 +203,7 @@ export function Hero({ onPinProgress }: HeroProps) {
         </div>
       </div>
       <div className="hero-scrollcue hero-fade" aria-hidden="true" data-testid="hero-scrollcue">
-        scroll
+        {t.hero.scroll}
       </div>
       <div ref={wipe} className="hero-wipe" aria-hidden="true" data-testid="hero-wipe" />
     </section>

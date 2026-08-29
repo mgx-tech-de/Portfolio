@@ -1,6 +1,7 @@
 import { Github, Linkedin, MapPin, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { site } from '../../data/site';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { Reveal } from '../Reveal';
 
 const SOCIAL_ICONS: Record<string, typeof Github> = {
@@ -10,6 +11,7 @@ const SOCIAL_ICONS: Record<string, typeof Github> = {
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useLanguage();
 
   return (
     <footer
@@ -22,10 +24,7 @@ export function Footer() {
         <div>
           <img src="/brand/mgx-logo.png" alt="MGX-Tech logo" className="h-10 w-10 object-contain" />
           <p className="mt-6 font-display text-lg font-medium text-ink">{site.tagline}</p>
-          <p className="mt-2 max-w-xs text-sm text-mute">
-            {site.owner} — {site.role}, building web apps, mobile apps and AI systems since{' '}
-            {site.founded}.
-          </p>
+          <p className="mt-2 max-w-xs text-sm text-mute">{t.footer.blurb(site.owner, site.founded)}</p>
         </div>
 
         <div>
@@ -34,7 +33,7 @@ export function Footer() {
             className="font-mono text-xs tracking-[0.25em] text-cyan"
             data-testid="footer-contact-heading"
           >
-            {'// CONTACT'}
+            {t.footer.contact}
           </h2>
           <ul className="mt-6 space-y-4 text-sm">
             <li className="flex items-center gap-3 text-mute" data-testid="footer-email">
@@ -52,7 +51,7 @@ export function Footer() {
 
         <div>
           <h2 className="font-mono text-xs tracking-[0.25em] text-cyan" data-testid="footer-legal-heading">
-            {'// LEGAL & SOCIAL'}
+            {t.footer.legal}
           </h2>
           <ul className="mt-6 space-y-3">
             <li>

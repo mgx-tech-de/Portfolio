@@ -165,17 +165,138 @@ class LeadRequest(BaseModel):
     email: str = Field(min_length=3, max_length=320)
     idea: str = Field(default="", max_length=4000)
 
+# ---------- lead notification email (managed Resend proxy) ----------
+import asyncio
+import re
+import ipaddress
+import httpx
+from html import escape
+from html.parser import HTMLParser
+from urllib.parse import urlparse
+
+EMAIL_BASE_URL = "https://integrations.emergentagent.com"
+EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
+EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
+EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
+
+_SHORTENERS = ("bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "goo.gl", "rebrand.ly")
+_CRED_ASK = ("reply with your password", "reply with the code", "send your password", "cvv",
+             "send us your password", "enter your password below", "confirm your card number",
+             "your full card number", "seed phrase", "recovery phrase", "verify your card",
+             "social security number", "confirm your bank details")
+_HOSTISH = re.compile(r"\b(?:https?://)?((?:[a-z0-9-]+\.)+[a-z]{2,})", re.I)
+
+def _host_ok(host: str) -> bool:
+    if not host or "xn--" in host:
+        return False
+    try:
+        ipaddress.ip_address(host)
+        return False
+    except ValueError:
+        pass
+    return not any(host == s or host.endswith("." + s) for s in _SHORTENERS)
+
+def _same_site(shown: str, real: str) -> bool:
+    return shown == real or real.endswith("." + shown) or shown.endswith("." + real)
+
+class _EmailScan(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.tags, self.urls, self.anchors = set(), [], []
+        self._href, self._text = None, []
+    def handle_starttag(self, tag, attrs):
+        self.tags.add(tag.lower())
+        self.urls += [v for k, v in attrs if k.lower() in ("href", "src") and v]
+        if tag.lower() == "a":
+            self._href = dict((k.lower(), v) for k, v in attrs).get("href")
+            self._text = []
+    def handle_data(self, data):
+        if self._href is not None:
+            self._text.append(data)
+    def handle_endtag(self, tag):
+        if tag.lower() == "a" and self._href is not None:
+            self.anchors.append((self._href, "".join(self._text)))
+            self._href, self._text = None, []
+
+def _assert_safe_email(subject: str, html: str) -> None:
+    scan = _EmailScan(); scan.feed(html)
+    if scan.tags & {"form", "input", "textarea", "select"}:
+        raise ValueError("No forms or input fields in email (G2)")
+    body = f"{subject}\n{html}".lower()
+    for p in _CRED_ASK:
+        if p in body:
+            raise ValueError(f"Email asks the recipient for credentials: {p!r} (G2)")
+    for url in scan.urls:
+        low = url.strip().lower()
+        if low.startswith(("mailto:", "tel:", "cid:", "#")):
+            continue
+        if not low.startswith("https://"):
+            raise ValueError(f"Email links/assets must be absolute https: {url!r} (G3)")
+        host = urlparse(low).hostname or ""
+        if not _host_ok(host) or urlparse(low).username is not None:
+            raise ValueError(f"Shortened, numeric-host or credential-bearing URL: {url!r} (G3)")
+    for href, text in scan.anchors:
+        real = urlparse(href.strip().lower()).hostname or ""
+        if not real:
+            continue
+        for m in _HOSTISH.finditer(text):
+            if not _same_site(m.group(1).lower(), real):
+                raise ValueError(f"Anchor text {m.group(1)!r} != real link host {real!r} (G3)")
+
+async def send_email(*, to: str, subject: str, html: str) -> str | None:
+    _assert_safe_email(subject, html)
+    payload = {"to": [to], "subject": subject, "html": html, "from_name": EMAIL_FROM_NAME}
+    if EMAIL_REPLY_TO:
+        payload["contact_email"] = EMAIL_REPLY_TO
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.post(
+            f"{EMAIL_BASE_URL}/api/v1/email/send",
+            headers={"X-Email-Key": EMAIL_KEY},
+            json=payload,
+        )
+    resp.raise_for_status()
+    return resp.json().get("id")
+
+async def _notify_lead(email: str, idea: str, when: str) -> None:
+    cell_l = 'padding:8px 14px;color:#8FA3B8;font-family:Arial,sans-serif;font-size:13px;vertical-align:top'
+    cell_r = 'padding:8px 14px;color:#E8F1F8;font-family:Arial,sans-serif;font-size:13px'
+    html = (
+        '<table role="presentation" width="100%" style="background:#05080D;padding:24px">'
+        '<tr><td style="background:#0B111A;border:1px solid #1E2A3A;padding:24px">'
+        '<p style="font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;color:#22D3EE;margin:0 0 16px">NEW LEAD — MGX-TECH CHAT</p>'
+        '<table role="presentation" width="100%">'
+        f'<tr><td style="{cell_l}">Email</td><td style="{cell_r}"><a href="mailto:{escape(email)}" style="color:#22D3EE">{escape(email)}</a></td></tr>'
+        f'<tr><td style="{cell_l}">Project idea</td><td style="{cell_r}">{escape(idea) if idea else "—"}</td></tr>'
+        f'<tr><td style="{cell_l}">Time (UTC)</td><td style="{cell_r}">{escape(when)}</td></tr>'
+        '</table>'
+        '<p style="font-family:Arial,sans-serif;font-size:11px;color:#8FA3B8;margin:20px 0 0">Sent by the MGX-Tech website assistant.</p>'
+        '</td></tr></table>'
+    )
+    try:
+        await send_email(
+            to=os.environ["LEAD_NOTIFY_EMAIL"],
+            subject=f"New chat lead — {email}",
+            html=html,
+        )
+        logger.info("Lead notification email dispatched for %s", email)
+    except httpx.HTTPStatusError as e:
+        logger.exception("Lead notification email failed: %s", e.response.text)
+    except Exception:
+        logger.exception("Lead notification email failed")
+
 @api_router.post("/leads")
 async def create_lead(req: LeadRequest):
     email = req.email.strip().lower()
     if "@" not in email or "." not in email.split("@")[-1]:
         raise HTTPException(status_code=400, detail="Invalid email address")
+    now = datetime.now(timezone.utc).isoformat()
     await db.leads.insert_one({
         "session_id": req.session_id,
         "email": email,
         "idea": req.idea.strip(),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": now,
     })
+    asyncio.create_task(_notify_lead(email, req.idea.strip(), now))
     return {"ok": True}
 
 

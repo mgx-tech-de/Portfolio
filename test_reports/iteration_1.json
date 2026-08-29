@@ -1,0 +1,16 @@
+{
+  "summary": "Verified both bug fixes: (1) Placeholder '[PLATZHALTER: Straße und Hausnummer]' fully removed from /impressum and /datenschutz; real address 'Alexanderplatz 1, 10178 Berlin, Deutschland' rendered correctly on both pages with no .legal-placeholder styling artifacts. (2) POST /api/leads with valid payload returns HTTP 200 {\"ok\": true} and backend log shows INFO 'Lead notification email dispatched for qa-verify@example.com' with no subsequent failure. Regression: invalid email 'not-an-email' correctly returns HTTP 400 {\"detail\":\"Invalid email address\"}.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "none",
+  "seed_data_creation": "One lead doc inserted via /api/leads with session_id=qa-lead-verify-0001, email=qa-verify@example.com (test data).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Impressum uses data-testid='impressum-page' and 'impressum-address' (Alexanderplatz 1). Datenschutz uses data-testid='datenschutz-page'. Backend log line to grep for lead dispatch success: 'Lead notification email dispatched for '. Old 08:49:53 ERROR in backend.err.log is from prior transient 422 and is stale (before fix).",
+  "rca of the issue": "Bug1: address block previously contained a red placeholder span; now hard-coded to 'Alexanderplatz 1' + '10178 Berlin, Deutschland' in Impressum.tsx and combined line in Datenschutz.tsx. Bug2: earlier one-off 422 from Resend proxy was transient; added INFO log on success and error-body logging in except branch of _notify_lead confirms subsequent calls succeed (202 accepted upstream)."
+}
