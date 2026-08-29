@@ -1,8 +1,53 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from '../../lib/gsap-setup';
-import { projects } from '../../data/projects';
+import { projects, type Project } from '../../data/projects';
 import { Reveal } from '../Reveal';
 import { SectionHeader } from '../SectionHeader';
+
+function ProjectTile({ project }: { project: Project }) {
+  const images = project.images ?? [];
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    if (images.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = setInterval(() => setIdx((i) => (i + 1) % images.length), 3600);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div className="project-tile">
+      <div className="project-tile-inner">
+        {images.length > 0 ? (
+          images.map((src, i) => (
+            <img
+              key={src}
+              src={src}
+              alt={i === 0 ? `${project.title} — screenshot` : ''}
+              aria-hidden={i !== 0}
+              loading="lazy"
+              className="tile-img"
+              style={{ opacity: i === idx ? 1 : 0 }}
+            />
+          ))
+        ) : (
+          <span className="tile-initials" aria-hidden="true">
+            {project.monogram}
+          </span>
+        )}
+        <span className="tile-slash" aria-hidden="true" />
+      </div>
+      {images.length > 1 && (
+        <div className="tile-dots" aria-hidden="true">
+          {images.map((_, i) => (
+            <span key={i} className={i === idx ? 'on' : ''} />
+          ))}
+        </div>
+      )}
+      <span className="tile-year font-mono">{project.year}</span>
+    </div>
+  );
+}
 
 export function Projects() {
   const root = useRef<HTMLElement>(null);
@@ -47,13 +92,7 @@ export function Projects() {
         <Reveal className="mt-16 grid gap-8 md:grid-cols-2">
           {projects.map((project) => (
             <article key={project.id} className="project-card" data-testid={`project-${project.id}`}>
-              <div className="project-tile" aria-hidden="true">
-                <div className="project-tile-inner">
-                  <span className="tile-initials">{project.monogram}</span>
-                  <span className="tile-slash" />
-                </div>
-                <span className="tile-year font-mono">{project.year}</span>
-              </div>
+              <ProjectTile project={project} />
               <div className="p-6 md:p-8">
                 <div className="flex items-baseline justify-between gap-4">
                   <span className="font-mono text-xs text-cyan">/{project.index}</span>

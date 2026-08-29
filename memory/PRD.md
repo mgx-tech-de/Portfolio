@@ -46,6 +46,17 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 - vite.config define maps REACT_APP_BACKEND_URL into import.meta.env (Vite exposes only VITE_*).
 - Verified: curl SSE stream ok; history endpoint returns persisted pair; live UI send/receive ok.
 
+2026-08-29 (project screenshots):
+- Real screenshots wired into Projects: Alzheimer (4, crossfade slideshow), AI New-Startup Scraper
+  (new project; composite split into ai-scraper-1/2.png), Client Websites (new project; htv24.de,
+  dilam-barbershop.de, dz-market-hanover.lovable.app captured with LOCAL Playwright + system Chrome —
+  the screenshot_tool does NOT persist files to this filesystem), Orientstation (3), Nitrex (1).
+  Stampwich still uses monogram tile — waiting for user screenshots.
+- ProjectTile: crossfade slideshow (3.6s, opacity, reduced-motion off), dots indicator, spotlight
+  vignette (.project-tile::after), parallax kept; lazy-loaded imgs; images?: string[] in Project.
+- Client Websites shown WITHOUT urls per user request.
+- Playwright pip package installed into /root/.venv (not a backend dep; screenshot tooling only).
+
 ## Bugs fixed during verification
 - .hero-wipe CSS translateX double-counted by GSAP → GSAP owns xPercent (2026-08-27).
 - Tailwind color token `base` collided with core `text-base` font-size → renamed to `night` (2026-08-28).
@@ -58,7 +69,8 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 - P1: Booking/calendar link from client → replace mailto CTA target (site.bookingUrl).
 - P1: Impressum + Datenschutz pages (/impressum, /datenschutz) — legal requirement in Germany.
 - P2: OG/social meta tags, sitemap, favicon variants.
-- P2: Project detail pages or modals with screenshots if client provides them.
+- P2: Project detail pages or modals if client provides more material.
+- P2: Stampwich screenshots (user will provide) → replace monogram tile.
 - P2: Chat: German/English greeting based on browser locale; lead capture (ask for email on intent).
 
 ## Verified
