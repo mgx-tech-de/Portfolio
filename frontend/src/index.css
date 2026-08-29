@@ -795,6 +795,81 @@ body {
   }
 }
 
+/* ---------- legal pages ---------- */
+.legal-body h2 {
+  margin-top: 2.5rem;
+  font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.legal-body p {
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+.legal-placeholder {
+  color: var(--accent-2);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+/* ---------- chat lead form ---------- */
+.chat-lead-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-self: stretch;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  padding: 14px;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+.chat-textarea {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+.chat-textarea:focus {
+  border-color: var(--accent);
+}
+.chat-textarea::placeholder {
+  color: var(--text-muted);
+}
+.lead-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 18px;
+  background: var(--accent);
+  color: var(--bg);
+  border: 1px solid var(--accent);
+  font-family: 'Space Grotesk', ui-sans-serif, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+.lead-submit:hover:not(:disabled) {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: #fff;
+}
+.lead-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
     animation: none;

@@ -88,7 +88,7 @@ Experience: 7+ years total; MGX-Tech freelance Berlin since 12/2025; Flutter/ML 
 
 Contact: contact@mgx-tech.com, +49 177 5478441, Berlin, Germany. Fastest way to book the free 20-minute intro call: WhatsApp at wa.me/491775478441. GitHub: github.com/mgx-tech-de. LinkedIn: linkedin.com/in/mgx-tech.
 
-Rules: Answer visitor questions about MGX-Tech services, skills, projects, experience and contact. Never invent prices, timelines or facts not listed here - for pricing or scheduling, suggest booking a free 20-minute intro call via contact@mgx-tech.com or +49 177 5478441. Reply in the visitor's language (German or English by default). Keep answers short: 2-5 sentences, plain text, no markdown symbols like ** or #."""
+Rules: Answer visitor questions about MGX-Tech services, skills, projects, experience and contact. Never invent prices, timelines or facts not listed here - for pricing or scheduling, suggest booking a free 20-minute intro call via WhatsApp wa.me/491775478441 or contact@mgx-tech.com. When a visitor shows genuine interest in starting a project (asks about pricing, availability, hiring, or describes a project they want built), offer to collect their email address and a short description of their project idea so Mahmoud can follow up personally. When you make this offer, append the exact token [LEAD_FORM] at the very end of your message. Reply in the visitor's language (German or English by default). Keep answers short: 2-5 sentences, plain text, no markdown symbols like ** or #."""
 
 class ChatMessageIn(BaseModel):
     role: str
@@ -158,6 +158,25 @@ async def chat_history(session_id: str):
         {"session_id": session_id}, {"_id": 0, "role": 1, "content": 1}
     ).sort("timestamp", 1).to_list(50)
     return {"messages": docs}
+
+
+class LeadRequest(BaseModel):
+    session_id: str = Field(min_length=8, max_length=64)
+    email: str = Field(min_length=3, max_length=320)
+    idea: str = Field(default="", max_length=4000)
+
+@api_router.post("/leads")
+async def create_lead(req: LeadRequest):
+    email = req.email.strip().lower()
+    if "@" not in email or "." not in email.split("@")[-1]:
+        raise HTTPException(status_code=400, detail="Invalid email address")
+    await db.leads.insert_one({
+        "session_id": req.session_id,
+        "email": email,
+        "idea": req.idea.strip(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    })
+    return {"ok": True}
 
 
 app.include_router(api_router)

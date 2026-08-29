@@ -66,6 +66,18 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
   https://wa.me/491775478441?text=Hi%20Mahmoud... ; hero + contact CTAs are anchors (target _blank);
   footer booking row renders automatically. Chat system prompt now mentions WhatsApp booking.
 
+2026-08-29 (legal + leads + OG):
+- react-router-dom v7: routes / (Home), /impressum, /datenschutz; pages/Home.tsx holds the old App
+  composition; LegalLayout (slim header + back link + Footer); RouteScroll resets scroll per route.
+- Impressum: Mahmoud Amrous, MGX-Tech, Steuernummer 18/207/00396, Freiberufler § 18 EStG, DDG §5 /
+  MStV §18 content; street address is a red-marked [PLATZHALTER]. Datenschutz: DSGVO sections incl.
+  chat-assistant processing (OpenAI API, stored messages, localStorage session, deletion on request).
+- Footer legal links now router <Link>s.
+- Lead capture: system prompt appends [LEAD_FORM] token when offering to collect details; ChatLauncher
+  strips token, shows lead form (email + idea) → POST /api/leads → Mongo `leads` collection; success
+  confirmation message. Invalid emails rejected 400 server-side.
+- OG/Twitter meta tags in index.html; generated /public/brand/og-image.png (1200x630, dark bg + logo).
+
 ## Bugs fixed during verification
 - .hero-wipe CSS translateX double-counted by GSAP → GSAP owns xPercent (2026-08-27).
 - Tailwind color token `base` collided with core `text-base` font-size → renamed to `night` (2026-08-28).
@@ -75,10 +87,10 @@ now populated from it. Remaining placeholder: bookingUrl (no calendar link in CV
 - Recruiter or partner scanning experience and skills.
 
 ## Backlog (prioritized)
-- P1: Impressum + Datenschutz pages (/impressum, /datenschutz) — legal requirement in Germany.
-- P2: OG/social meta tags, sitemap, favicon variants.
+- P0: Client provides street address → replace [PLATZHALTER] in Impressum + Datenschutz (both pages).
+- P2: OG image URL update when a custom domain replaces the preview URL.
 - P2: Project detail pages or modals if client provides more material.
-- P2: Chat: German/English greeting based on browser locale; lead capture (ask for email on intent).
+- P2: Chat: German/English greeting based on browser locale.
 
 ## Verified
 - 2026-08-28: curl 200 local + preview; screenshots at 1440 for services/projects/experience/skills/contact;

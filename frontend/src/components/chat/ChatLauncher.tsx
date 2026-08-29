@@ -7,6 +7,8 @@ interface ChatMsg {
   content: string;
 }
 
+const LEAD_TOKEN = '[LEAD_FORM]';
+
 const GREETING: ChatMsg = {
   role: 'assistant',
   content:
@@ -32,6 +34,9 @@ export function ChatLauncher() {
   const [messages, setMessages] = useState<ChatMsg[]>([GREETING]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
+  const [leadEmail, setLeadEmail] = useState('');
+  const [leadIdea, setLeadIdea] = useState('');
+  const [leadStatus, setLeadStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionRef = useRef<string>('');
@@ -56,7 +61,7 @@ export function ChatLauncher() {
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
-  }, [messages, open]);
+  }, [messages, open, leadStatus]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -65,6 +70,10 @@ export function ChatLauncher() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  const leadOffered =
+    leadStatus !== 'sent' &&
+    messages.some((m) => m.role === 'assistant' && m.content.includes(LEAD_TOKEN));
 
   const patchLast = (content: string) =>
     setMessages((prev) => {
@@ -136,6 +145,35 @@ export function ChatLauncher() {
     }
   };
 
+  const submitLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (leadStatus === 'sending') return;
+    setLeadStatus('sending');
+    try {
+      const res = await fetch(`${API_URL}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionRef.current,
+          email: leadEmail,
+          idea: leadIdea,
+        }),
+      });
+      if (!res.ok) throw new Error('lead failed');
+      setLeadStatus('sent');
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content:
+            "Got it — your details are with Mahmoud and he'll get back to you shortly. For an instant answer, you can also WhatsApp him directly at +49 177 5478441.",
+        },
+      ]);
+    } catch {
+      setLeadStatus('error');
+    }
+  };
+
   return (
     <>
       <div
@@ -181,10 +219,56 @@ export function ChatLauncher() {
                   <span />
                 </span>
               ) : (
-                msg.content
+                msg.content.replace(LEAD_TOKEN, '').trim()
               )}
             </div>
           ))}
+
+          {leadOffered && (
+            <form className="chat-lead-form" onSubmit={submitLead} data-testid="chat-lead-form">
+              <p className="font-mono text-[10px] tracking-[0.2em] text-cyan">
+                {'// LEAVE YOUR DETAILS'}
+              </p>
+              <input
+                type="email"
+                required
+                value={leadEmail}
+                onChange={(e) => setLeadEmail(e.target.value)}
+                placeholder="your@email.com"
+                aria-label="Your email address"
+                className="chat-input w-full"
+                maxLength={320}
+                data-testid="lead-email-input"
+                tabIndex={open ? 0 : -1}
+              />
+              <textarea
+                value={leadIdea}
+                onChange={(e) => setLeadIdea(e.target.value)}
+                placeholder="A sentence or two about your project idea…"
+                aria-label="Your project idea"
+                rows={3}
+                className="chat-textarea"
+                maxLength={4000}
+                data-testid="lead-idea-input"
+                tabIndex={open ? 0 : -1}
+              />
+              <button
+                type="submit"
+                className="lead-submit"
+                disabled={leadStatus === 'sending'}
+                data-testid="lead-submit-button"
+                tabIndex={open ? 0 : -1}
+              >
+                {leadStatus === 'sending' ? 'Sending…' : 'Send to Mahmoud'}
+              </button>
+              {leadStatus === 'error' && (
+                <p className="font-mono text-xs text-red" data-testid="lead-error">
+                  Couldn&apos;t send — please email contact@mgx-tech.com directly.
+                </p>
+              )}
+            </form>
+          )}
+
           {messages.length === 1 && (
             <div className="mt-3 flex flex-col items-start gap-2" data-testid="chat-suggestions">
               {SUGGESTIONS.map((s) => (

@@ -1,4 +1,5 @@
 import { Github, Linkedin, MapPin, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { site } from '../../data/site';
 import { Reveal } from '../Reveal';
 
@@ -55,14 +56,14 @@ export function Footer() {
           </h2>
           <ul className="mt-6 space-y-3">
             <li>
-              <a href={site.legal.impressum} className="footer-legal-link" data-testid="footer-impressum-link">
+              <Link to="/impressum" className="footer-legal-link" data-testid="footer-impressum-link">
                 Impressum
-              </a>
+              </Link>
             </li>
             <li>
-              <a href={site.legal.datenschutz} className="footer-legal-link" data-testid="footer-datenschutz-link">
+              <Link to="/datenschutz" className="footer-legal-link" data-testid="footer-datenschutz-link">
                 Datenschutz
-              </a>
+              </Link>
             </li>
           </ul>
           <div className="mt-6 flex gap-3" data-testid="footer-socials">
